@@ -2,7 +2,7 @@ const _ = require('lodash')
 
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const { APP_SECRET, getUserId } = require('../utils')
+const { APP_SECRET, getUserId, isAuthenticated } = require('../utils')
 
 const signup = async (parent, args, context, info) => {
   const password = await bcrypt.hash(args.password, 10)
@@ -29,30 +29,42 @@ const login = async (parent, args, context, info) => {
 }
 
 const post = (parent, args, context) => {
+  const userId = getUserId(context)
   return context.prisma.createLink({
     url: args.url,
-    description: args.description
-  })
-}
-const updateLink = (parent, args, context, info) => {
-  const data = {}
-  if (!_.isEmpty(args.description)) {
-    data.description = args.description
-  }
-  if (!_.isEmpty(args.url)) {
-    data.url = args.url
-  }
-  return context.prisma.updateLink({
-    data: data,
-    where: {
-      id: args.id
+    description: args.description,
+    postedBy: {
+      connect: {
+        id: userId
+      }
     }
   })
 }
+
+const updateLink = (parent, args, context, info) => {
+  if (isAuthenticated(context)) {
+    const data = {}
+    if (!_.isEmpty(args.description)) {
+      data.description = args.description
+    }
+    if (!_.isEmpty(args.url)) {
+      data.url = args.url
+    }
+    return context.prisma.updateLink({
+      data: data,
+      where: {
+        id: args.id
+      }
+    })
+  }
+}
+
 const deleteLink = (parent, args, context, info) => {
-  return context.prisma.deleteLink({
-    id: args.id
-  })
+  if (isAuthenticated(context)) {
+    return context.prisma.deleteLink({
+      id: args.id
+    })
+  }
 }
 
 module.exports = {

@@ -16,10 +16,43 @@ After running
 ```
 # Simple get information about schema query
 query {
-  info,
-  feed {
-    id
+  info
+}
+
+# Sign up a new user 
+mutation {
+  signup(
+    name: "Alice"
+    email: "alice@prisma.io"
+    password: "graphql"
+  ) {
+    token
+    user {
+      id
+    }
   }
+}
+
+#Login with user 
+mutation {
+  login(
+    email: "alice@prisma.io"
+    password: "graphql"
+  ) {
+    token
+    user {
+      email
+      links {
+        url
+        description
+      }
+    }
+  }
+}
+
+# Set token in header (all below requests need a token)
+{
+  "Authorization": "Bearer __TOKEN__"
 }
 
 # Simple get all information about your feed (links)
@@ -27,16 +60,11 @@ query {
   feed {
     id,
     url,
-    description
-  }
-}
-
-#Get an individual link from the feed
-query {
-  link(id:"cjz1o0aw5xzaz0b53am7cjsv5") {
-    id,
     description,
-    url
+    postedBy {
+      id,
+      name
+    }
   }
 }
 
@@ -49,6 +77,15 @@ mutation {
     id,
     url,
     description
+  }
+}
+
+#Get an individual link from the feed
+query {
+  link(id:"cjz1o0aw5xzaz0b53am7cjsv5") {
+    id,
+    description,
+    url
   }
 }
 
@@ -84,5 +121,8 @@ mutation {
 How to use prisma: https://www.prisma.io/client/client-javascript/
 
 ### Next
-1. https://www.howtographql.com/graphql-js/6-authentication/
+1. Add postedBy to update.  Does update work if you don't supply some information in args (e.g url or description)
+2. Create new query, to only get links for user in token
+3. Duplicate all methods, so that you have a query/mutation that can only act on the current user in tokens links/feed.  e.g can only update if it is a link posted by you
+4. https://www.howtographql.com/graphql-js/7-subscriptions/
  

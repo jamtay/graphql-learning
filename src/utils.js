@@ -3,16 +3,24 @@ const APP_SECRET = 'Some-secret123'
 
 const getUserId = context => {
   const Authorization = context.request.get('Authorization')
-  if (Authorization) {
+  if (isAuthenticated(context)) {
     const token = Authorization.replace('Bearer ', '')
     const { userId } = jwt.verify(token, APP_SECRET)
     return userId
   }
+}
 
-  throw new Error('Not authenticated')
+const isAuthenticated = context => {
+  const auth = context.request.get('Authorization')
+  if (auth) {
+    return true
+  } else {
+    throw new Error('Not authenticated')
+  }
 }
 
 module.exports = {
   APP_SECRET,
-  getUserId
+  getUserId,
+  isAuthenticated
 }
