@@ -150,6 +150,21 @@ subscription {
       }
   }
 }
+
+# Subscription to inform when a new upvote is created 
+subscription {
+  newVote {
+    id
+    link {
+      url
+      description
+    }
+    user {
+      name
+      email
+    }
+  }
+}
 ```
 
 ## Database information 
