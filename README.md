@@ -64,6 +64,12 @@ query {
     postedBy {
       id,
       name
+    },
+    votes {
+      id,
+      user {
+        name
+      }
     }
   }
 }
@@ -85,7 +91,12 @@ query {
   link(id:"cjz1o0aw5xzaz0b53am7cjsv5") {
     id,
     description,
-    url
+    url,
+    votes: {
+      user: {
+        name
+      }
+    }
   }
 }
 
@@ -109,6 +120,20 @@ mutation {
     id,
     url,
     description
+  }
+}
+
+#Vote for a link
+mutation {
+  vote(linkId: "__LINK_ID__") {
+    link {
+      url
+      description
+    }
+    user {
+      name
+      email
+    }
   }
 }
 
