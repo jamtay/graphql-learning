@@ -111,6 +111,20 @@ mutation {
     description
   }
 }
+
+# Subscription to inform when a new link is created 
+subscription {
+  newLink {
+      id
+      url
+      description
+      postedBy {
+        id
+        name
+        email
+      }
+  }
+}
 ```
 
 ## Database information 

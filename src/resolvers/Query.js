@@ -1,4 +1,4 @@
-const { s } = require('../utils')
+const { isAuthenticated } = require('../utils')
 
 const info = () => `This is the API of a Hackernews Clone`
 
