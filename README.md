@@ -58,17 +58,19 @@ mutation {
 # Simple get all information about your feed (links)
 query {
   feed {
-    id,
-    url,
-    description,
-    postedBy {
+    links {
       id,
-      name
-    },
-    votes {
-      id,
-      user {
+      url,
+      description,
+      postedBy {
+        id,
         name
+      },
+      votes {
+        id,
+        user {
+          name
+        }
       }
     }
   }
@@ -86,14 +88,14 @@ mutation {
   }
 }
 
-#Get an individual link from the feed
+# Get an individual link from the feed
 query {
   link(id:"cjz1o0aw5xzaz0b53am7cjsv5") {
     id,
     description,
     url,
-    votes: {
-      user: {
+    votes {
+      user {
         name
       }
     }
@@ -103,12 +105,15 @@ query {
 #Search for links that the description or url contains the filter string
 query {
   feed(filter:"description") {
-    id
-  	description
-    url
-    postedBy {
+    count
+    links {
       id
-      name
+  		description
+    	url
+    	postedBy {
+      	id
+      	name
+   	 	}
     }
   }
 }
@@ -119,18 +124,23 @@ query {
     first: 2
     skip: 3
   ) {
-    id
-    description
-    url
+    links {
+      id
+      description
+      url
+    }
   }
 }
 
 # Query with an orderBy order
 query {
   feed(orderBy: createdAt_ASC) {
-    id
-    description
-    url
+    count
+    links {
+      id
+      description
+      url
+    }
   }
 }
 
@@ -231,4 +241,6 @@ enum LinkOrderByInput {
 1. Add postedBy to update.  Does update work if you don't supply some information in args (e.g url or description)
 2. Create new query, to only get links for user in token
 3. Duplicate all methods, so that you have a query/mutation that can only act on the current user in tokens links/feed.  e.g can only update if it is a link posted by you
-4. return createdAt for a link
+4. Return createdAt for a link
+5. Add more count endpoints.  Full count, filtered count etc
+6. More reading: https://www.prisma.io/blog/
