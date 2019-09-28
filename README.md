@@ -14,13 +14,15 @@ After running
 1. Go to localhost:4000
 2. Enter one of the following queries or mutations in the playground
 ```
+# Add names to queries to store multiple in one playground
+
 # Simple get information about schema query
-query {
+query GetInfo {
   info
 }
 
 # Sign up a new user 
-mutation {
+mutation SignUp {
   signup(
     name: "Alice"
     email: "alice@prisma.io"
@@ -34,7 +36,7 @@ mutation {
 }
 
 #Login with user 
-mutation {
+mutation LogIn {
   login(
     email: "alice@prisma.io"
     password: "graphql"
@@ -51,12 +53,12 @@ mutation {
 }
 
 # Set token in header (all below requests need a token)
-{
-  "Authorization": "Bearer __TOKEN__"
-}
+# {
+#   "Authorization": "Bearer __TOKEN__"
+# }
 
 # Simple get all information about your feed (links)
-query {
+query GetFeed {
   feed {
     links {
       id,
@@ -77,7 +79,7 @@ query {
 }
 
 # Add a new link to the feed
-mutation {
+mutation PostNewLink {
   post(
     url:"new-one",
     description:"description"
@@ -89,7 +91,7 @@ mutation {
 }
 
 # Get an individual link from the feed
-query {
+query GetSingleLink {
   link(id:"cjz1o0aw5xzaz0b53am7cjsv5") {
     id,
     description,
@@ -103,7 +105,7 @@ query {
 }
 
 #Search for links that the description or url contains the filter string
-query {
+query SearchFeed {
   feed(filter:"description") {
     count
     links {
@@ -119,7 +121,7 @@ query {
 }
 
 # Query with paging (first=(limit/first x elements), skip=offset, last=(last x elements)
-query {
+query GetLinksPaging {
   feed(
     first: 2
     skip: 3
@@ -133,7 +135,7 @@ query {
 }
 
 # Query with an orderBy order
-query {
+query GetOrderedFeed {
   feed(orderBy: createdAt_ASC) {
     count
     links {
@@ -145,7 +147,7 @@ query {
 }
 
 # Delete a link from within the feed
-mutation {
+mutation DeleteLink {
   deleteLink(
     id: "cjz1o0aw5xzaz0b53am7cjsv5"
   ) {
@@ -155,7 +157,7 @@ mutation {
 }
 
 # Update the link within the feed
-mutation {
+mutation UpdateLink {
   updateLink(
     id:"cjz1o0aw5xzaz0b53am7cjsv5",
   	url: "url-test",
@@ -167,8 +169,8 @@ mutation {
   }
 }
 
-#Vote for a link
-mutation {
+# Vote for a link
+mutation VoteForALink {
   vote(linkId: "__LINK_ID__") {
     link {
       url
@@ -182,7 +184,7 @@ mutation {
 }
 
 # Subscription to inform when a new link is created 
-subscription {
+subscription LinkSubscription {
   newLink {
       id
       url
@@ -196,7 +198,7 @@ subscription {
 }
 
 # Subscription to inform when a new upvote is created 
-subscription {
+subscription VoteSubscription {
   newVote {
     id
     link {
